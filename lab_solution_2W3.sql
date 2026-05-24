@@ -31,7 +31,7 @@ FROM sakila.rental LIMIT 20;
 SELECT *,  DAYNAME(rental_date) AS weekday_rented, 
 CASE
 	WHEN DAYNAME(rental_date) IN('Saturday','Sunday') THEN 'weekend'
-    ELSE 'week'
+    ELSE 'workday'
 END AS 'DAY_TYPE'
 FROM sakila.rental;
 
@@ -40,7 +40,8 @@ FROM sakila.rental;
 -- 3. retrieve the film titles and their rental duration. If any rental duration value is NULL, 
 -- replace it with the string 'Not Available'. Sort the results of the film title in ascending order.
 
-SELECT title, IFNULL(rental_duration, 'Not Available') AS rental_duration
+SELECT title, IFNULL(
+	CONCAT(rental_duration,' days'), 'Not Available') AS rental_duration
 FROM sakila.film ORDER BY title;
 
 
