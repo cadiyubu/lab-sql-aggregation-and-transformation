@@ -9,7 +9,7 @@ FROM sakila.film;
 
 -- 1.2. Express the average movie duration in hours and minutes. 
 -- Don't use decimals.
-SELECT CONCAT(floor(AVG(length)/60), 'h', MOD(floor(AVG(length)),60), 'min') 
+SELECT CONCAT(floor(AVG(length)/60), 'h', ROUND(MOD(floor(AVG(length)),60)), 'min') 
 AS average_movie_duration 
 FROM sakila.film; 
 
@@ -28,16 +28,25 @@ FROM sakila.rental LIMIT 20;
 
 -- 2.3 Bonus: Retrieve rental information and add an additional column called DAY_TYPE with values 
 -- 'weekend' or 'workday', depending on the day of the week.
+SELECT *,  DAYNAME(rental_date) AS weekday_rented, 
+CASE
+	WHEN DAYNAME(rental_date) IN('Saturday','Sunday') THEN 'weekend'
+    ELSE 'week'
+END AS 'DAY_TYPE'
+FROM sakila.rental;
+
+
 
 -- 3. retrieve the film titles and their rental duration. If any rental duration value is NULL, 
 -- replace it with the string 'Not Available'. Sort the results of the film title in ascending order.
 
 SELECT title, IFNULL(rental_duration, 'Not Available') AS rental_duration
 FROM sakila.film ORDER BY title;
-    
+
+
 -- Challenge 2
 -- 1.1 The total number of films that have been released.
-SELECT COUNT(release_year) AS total_films_released FROM sakila.film;
+SELECT COUNT(film_id) AS total_films_released FROM sakila.film;
 
 -- 1.2 The number of films for each rating.
 SELECT rating, COUNT(film_id) AS number_of_films FROM sakila.film 
