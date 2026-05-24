@@ -4,14 +4,8 @@ USE sakila;
 -- 1.1 Determine the shortest and longest movie durations and name the values 
 -- as max_duration and min_duration.
 -- Determining shortest movies durations
-SELECT title, length AS min_duration
-FROM sakila.film
-WHERE length = (SELECT MIN(length) FROM sakila.film);
-
--- Determining longest movies durations
-SELECT title, length AS max_duration
-FROM sakila.film
-WHERE length = (SELECT MAX(length) FROM sakila.film);
+SELECT MIN(length) AS min_duration, MAX(length) AS max_duration
+FROM sakila.film;
 
 -- 1.2. Express the average movie duration in hours and minutes. 
 -- Don't use decimals.
@@ -22,7 +16,7 @@ FROM sakila.film;
 -- 2.1 Calculate the number of days that the company has been operating
 -- first rental date
 SELECT DATEDIFF(
-	MAX(last_update),
+	MAX(rental_date),
     MIN(rental_date)) AS days_of_operation
 FROM sakila.rental;
 
@@ -46,25 +40,25 @@ FROM sakila.film ORDER BY title;
 SELECT COUNT(release_year) AS total_films_released FROM sakila.film;
 
 -- 1.2 The number of films for each rating.
-SELECT rental_rate, COUNT(film_id) AS number_of_films FROM sakila.film 
-GROUP BY rental_rate;
+SELECT rating, COUNT(film_id) AS number_of_films FROM sakila.film 
+GROUP BY rating;
 
 -- 1.3 The number of films for each rating, sorting the results in descending order of the 
 -- number of films. This will help you to better understand the popularity of different film 
 -- ratings and adjust purchasing decisions accordingly.
-SELECT rental_rate, COUNT(film_id) AS number_of_films FROM sakila.film 
-GROUP BY rental_rate ORDER BY number_of_films DESC;
+SELECT rating, COUNT(film_id) AS number_of_films FROM sakila.film 
+GROUP BY rating ORDER BY number_of_films DESC;
 
 -- 2.1 The mean film duration for each rating, and sort the results in descending order of 
 -- the mean duration. Round off the average lengths to two decimal places. This will help identify 
 -- popular movie lengths for each category.
-SELECT rental_rate, ROUND(AVG(length),2) AS mean_film_duration FROM sakila.film 
-GROUP BY rental_rate ORDER BY mean_film_duration DESC;
+SELECT rating, ROUND(AVG(length),2) AS mean_film_duration FROM sakila.film 
+GROUP BY rating ORDER BY mean_film_duration DESC;
 
 -- 2.2 Identify which ratings have a mean duration of over two hours in order to help select films for 
 -- customers who prefer longer movies.
-SELECT rental_rate, ROUND(AVG(length),2) AS mean_film_duration FROM sakila.film 
-GROUP BY rental_rate
+SELECT rating, ROUND(AVG(length),2) AS mean_film_duration FROM sakila.film 
+GROUP BY rating
 HAVING mean_film_duration>120 ORDER BY mean_film_duration DESC;
 
 
